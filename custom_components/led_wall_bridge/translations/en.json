@@ -1,0 +1,185 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "LED Wall Bridge",
+        "description": "What would you like to add?",
+        "menu_options": {
+          "device": "LED wall / controller (local network)",
+          "cloud": "VNNOX cloud account (optional, for all walls)"
+        }
+      },
+      "device": {
+        "title": "Add LED wall",
+        "description": "Connect a NovaStar player in your local network (e.g. T series, Taurus). You need the same login you use in ViPlex Express.",
+        "data": {
+          "host": "IP address",
+          "sn": "Serial number (SN)",
+          "username": "Username",
+          "password": "Password",
+          "port": "Port"
+        },
+        "data_description": {
+          "host": "The IP address of the LED controller in your network, e.g. 192.168.1.50. You can find it in your router or in ViPlex Express.",
+          "sn": "Printed on the label of the controller and shown in ViPlex Express.",
+          "username": "Usually “admin”.",
+          "password": "The password you use to log in to the controller in ViPlex Express. Note: after 3 wrong attempts the controller blocks logins for 60 seconds.",
+          "port": "Only change this if you know what you are doing. Default: 16674."
+        }
+      },
+      "cloud": {
+        "title": "Connect VNNOX cloud account",
+        "description": "Optional. With a cloud account Home Assistant also shows whether your walls are online in VNNOX. One account is enough for all walls.\n\n**Where do I get the values?**\n1. Open the NovaCloud Open Platform: Europe: {portal_eu} · USA: {portal_us}\n2. Click “Log In” (top right) and sign in with your VNNOX account.\n3. Open the “Authentication” tab and copy the three values below.\n\nImportant: the “VNNOX authentication information” (server address, authentication username/password) used to bind a player does **not** work here.",
+        "data": {
+          "cloud_domain": "Interface Access Domain Name",
+          "app_key": "AppKey",
+          "app_secret": "AppSecret"
+        },
+        "data_description": {
+          "cloud_domain": "Shown in the portal, e.g. open-eu.vnnox.com for Europe.",
+          "app_key": "Shown in the portal under “Authentication”.",
+          "app_secret": "Shown in the portal under “Authentication”. Keep it secret."
+        }
+      },
+      "reauth_confirm": {
+        "title": "Log in again",
+        "description": "Please confirm the login again. Possible reasons: the password was changed, or the security certificate of the controller has changed (e.g. after a factory reset or firmware update). If you did not change anything, check your network first – a changed certificate can also mean that someone is intercepting the connection.",
+        "data": {
+          "username": "Username",
+          "password": "Password",
+          "app_key": "AppKey",
+          "app_secret": "AppSecret"
+        }
+      },
+      "reconfigure": {
+        "title": "Change connection",
+        "data": {
+          "host": "IP address",
+          "port": "Port",
+          "cloud_domain": "Interface Access Domain Name"
+        },
+        "data_description": {
+          "host": "The IP address of the LED controller in your network, e.g. 192.168.1.50. You can find it in your router or in ViPlex Express.",
+          "cloud_domain": "Shown in the portal, e.g. open-eu.vnnox.com for Europe."
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "The controller cannot be reached. Check the IP address and that it is switched on and in the same network.",
+      "invalid_auth": "Login failed. Check serial number, username and password. After 3 wrong attempts the controller blocks logins for 60 seconds.",
+      "not_supported": "This controller's firmware does not support the interface used by this integration.",
+      "unknown": "Unexpected error. Details are in the Home Assistant log.",
+      "cloud_auth": "VNNOX rejected the credentials. Check AppKey, AppSecret and especially the domain (e.g. open-eu… instead of open-us…).",
+      "cloud_connect": "The VNNOX cloud cannot be reached. Check the domain."
+    },
+    "abort": {
+      "already_configured": "This device or account is already set up.",
+      "reauth_successful": "Logged in again successfully.",
+      "reconfigure_successful": "Connection updated."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Settings",
+        "description": "Tip: whether brightness and volume are stored permanently is set directly on the device with the switch “Store values permanently” (under Controls).\n• On: the wall keeps the value after a restart or power cut.\n• Off: the value only applies until the next restart. This protects the controller's memory if an automation changes the brightness very often (e.g. every minute).",
+        "data": {
+          "scan_interval": "Update interval (seconds)",
+          "screenshot_interval": "Screenshot interval (seconds)"
+        },
+        "data_description": {
+          "scan_interval": "How often Home Assistant reads the current values. Default: 30.",
+          "screenshot_interval": "How often a new picture of the screen is taken. 0 = only when you press “Refresh screenshot”. Default: 60."
+        }
+      }
+    },
+    "abort": {
+      "no_options": "The cloud account has no options."
+    }
+  },
+  "entity": {
+    "light": {
+      "led_wall": {
+        "name": "LED wall"
+      }
+    },
+    "number": {
+      "brightness_level": {
+        "name": "Brightness"
+      },
+      "volume": {
+        "name": "Volume"
+      }
+    },
+    "sensor": {
+      "brightness": {
+        "name": "Current brightness"
+      },
+      "brightness_raw": {
+        "name": "Brightness (raw value)"
+      },
+      "firmware": {
+        "name": "Firmware"
+      },
+      "android_version": {
+        "name": "Android version"
+      },
+      "fpga_version": {
+        "name": "FPGA version"
+      },
+      "resolution": {
+        "name": "Resolution"
+      },
+      "device_time": {
+        "name": "Device time"
+      },
+      "time_zone": {
+        "name": "Time zone"
+      },
+      "cloud_last_online": {
+        "name": "Last online (VNNOX cloud)"
+      },
+      "cloud_version": {
+        "name": "Player version (VNNOX cloud)"
+      },
+      "cloud_ip": {
+        "name": "IP address (VNNOX cloud)"
+      }
+    },
+    "switch": {
+      "persist": {
+        "name": "Store values permanently"
+      },
+      "screen": {
+        "name": "Screen"
+      },
+      "brightness_schedule": {
+        "name": "Brightness schedule (device)"
+      },
+      "power_schedule": {
+        "name": "On/off schedule (device)"
+      },
+      "relay": {
+        "name": "Relay"
+      }
+    },
+    "button": {
+      "sync_time": {
+        "name": "Sync time"
+      },
+      "refresh_screenshot": {
+        "name": "Refresh screenshot"
+      }
+    },
+    "image": {
+      "screenshot": {
+        "name": "Screen content"
+      }
+    },
+    "binary_sensor": {
+      "cloud_online": {
+        "name": "Online (VNNOX cloud)"
+      }
+    }
+  }
+}

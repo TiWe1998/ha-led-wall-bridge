@@ -1,0 +1,185 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "LED Wall Bridge",
+        "description": "Co chcete přidat?",
+        "menu_options": {
+          "device": "LED stěna / řadič (místní síť)",
+          "cloud": "Cloudový účet VNNOX (volitelné, pro všechny stěny)"
+        }
+      },
+      "device": {
+        "title": "Přidat LED stěnu",
+        "description": "Připojí přehrávač NovaStar ve vaší místní síti (např. řada T, Taurus). Potřebujete stejné přihlašovací údaje jako v ViPlex Express.",
+        "data": {
+          "host": "IP adresa",
+          "sn": "Sériové číslo (SN)",
+          "username": "Uživatelské jméno",
+          "password": "Heslo",
+          "port": "Port"
+        },
+        "data_description": {
+          "host": "IP adresa LED řadiče ve vaší síti, např. 192.168.1.50. Najdete ji ve svém routeru nebo v ViPlex Express.",
+          "sn": "Je uvedeno na štítku řadiče a zobrazuje se v ViPlex Express.",
+          "username": "Obvykle „admin“.",
+          "password": "Heslo, kterým se k řadiči přihlašujete v ViPlex Express. Pozor: po 3 chybných pokusech řadič zablokuje přihlášení na 60 sekund.",
+          "port": "Měňte jen tehdy, pokud víte, co děláte. Výchozí: 16674."
+        }
+      },
+      "cloud": {
+        "title": "Připojit cloudový účet VNNOX",
+        "description": "Volitelné. S cloudovým účtem Home Assistant navíc zobrazuje, zda jsou vaše stěny ve VNNOX online. Jeden účet stačí pro všechny stěny.\n\n**Kde získám hodnoty?**\n1. Otevřete NovaCloud Open Platform: Evropa: {portal_eu} · USA: {portal_us}\n2. Klikněte na „Log In“ (vpravo nahoře) a přihlaste se svým účtem VNNOX.\n3. Otevřete kartu „Authentication“ a zkopírujte tři hodnoty níže.\n\nDůležité: „ověřovací údaje VNNOX“ (adresa serveru, ověřovací uživatelské jméno/heslo) sloužící k propojení přehrávače zde **nefungují**.",
+        "data": {
+          "cloud_domain": "Interface Access Domain Name",
+          "app_key": "AppKey",
+          "app_secret": "AppSecret"
+        },
+        "data_description": {
+          "cloud_domain": "Zobrazeno v portálu, např. open-eu.vnnox.com pro Evropu.",
+          "app_key": "Zobrazeno v portálu v sekci „Authentication“.",
+          "app_secret": "Zobrazeno v portálu v sekci „Authentication“. Uchovejte v tajnosti."
+        }
+      },
+      "reauth_confirm": {
+        "title": "Přihlásit se znovu",
+        "description": "Potvrďte prosím znovu přihlášení. Možné důvody: heslo bylo změněno, nebo se změnil bezpečnostní certifikát řadiče (např. po obnovení továrního nastavení nebo aktualizaci firmwaru). Pokud jste nic neměnili, nejprve zkontrolujte síť – změněný certifikát může také znamenat, že někdo připojení odposlouchává.",
+        "data": {
+          "username": "Uživatelské jméno",
+          "password": "Heslo",
+          "app_key": "AppKey",
+          "app_secret": "AppSecret"
+        }
+      },
+      "reconfigure": {
+        "title": "Změnit připojení",
+        "data": {
+          "host": "IP adresa",
+          "port": "Port",
+          "cloud_domain": "Interface Access Domain Name"
+        },
+        "data_description": {
+          "host": "IP adresa LED řadiče ve vaší síti, např. 192.168.1.50. Najdete ji ve svém routeru nebo v ViPlex Express.",
+          "cloud_domain": "Zobrazeno v portálu, např. open-eu.vnnox.com pro Evropu."
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Řadič není dostupný. Zkontrolujte IP adresu a zda je zapnutý a ve stejné síti.",
+      "invalid_auth": "Přihlášení se nezdařilo. Zkontrolujte sériové číslo, uživatelské jméno a heslo. Po 3 chybných pokusech řadič zablokuje přihlášení na 60 sekund.",
+      "not_supported": "Firmware tohoto řadiče nepodporuje použité rozhraní.",
+      "unknown": "Neočekávaná chyba. Podrobnosti najdete v protokolu Home Assistant.",
+      "cloud_auth": "VNNOX odmítl přihlašovací údaje. Zkontrolujte AppKey, AppSecret a hlavně doménu (např. open-eu… místo open-us…).",
+      "cloud_connect": "Cloud VNNOX není dostupný. Zkontrolujte doménu."
+    },
+    "abort": {
+      "already_configured": "Toto zařízení nebo účet je již nastaven.",
+      "reauth_successful": "Opětovné přihlášení proběhlo úspěšně.",
+      "reconfigure_successful": "Připojení aktualizováno."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Nastavení",
+        "description": "Tip: zda se jas a hlasitost ukládají trvale, nastavíte přímo u zařízení přepínačem „Ukládat hodnoty trvale“ (v sekci Ovládání).\n• Zapnuto: stěna si hodnotu zachová i po restartu nebo výpadku proudu.\n• Vypnuto: hodnota platí jen do příštího restartu. To šetří paměť řadiče, pokud automatizace mění jas velmi často (např. každou minutu).",
+        "data": {
+          "scan_interval": "Interval aktualizace (sekundy)",
+          "screenshot_interval": "Interval snímků obrazovky (sekundy)"
+        },
+        "data_description": {
+          "scan_interval": "Jak často Home Assistant načítá aktuální hodnoty. Výchozí: 30.",
+          "screenshot_interval": "Jak často se pořizuje nový snímek obrazovky. 0 = jen po stisknutí „Obnovit snímek obrazovky“. Výchozí: 60."
+        }
+      }
+    },
+    "abort": {
+      "no_options": "Cloudový účet nemá žádné možnosti."
+    }
+  },
+  "entity": {
+    "light": {
+      "led_wall": {
+        "name": "LED stěna"
+      }
+    },
+    "number": {
+      "brightness_level": {
+        "name": "Jas"
+      },
+      "volume": {
+        "name": "Hlasitost"
+      }
+    },
+    "sensor": {
+      "brightness": {
+        "name": "Aktuální jas"
+      },
+      "brightness_raw": {
+        "name": "Jas (surová hodnota)"
+      },
+      "firmware": {
+        "name": "Firmware"
+      },
+      "android_version": {
+        "name": "Verze Androidu"
+      },
+      "fpga_version": {
+        "name": "Verze FPGA"
+      },
+      "resolution": {
+        "name": "Rozlišení"
+      },
+      "device_time": {
+        "name": "Čas zařízení"
+      },
+      "time_zone": {
+        "name": "Časové pásmo"
+      },
+      "cloud_last_online": {
+        "name": "Naposledy online (cloud VNNOX)"
+      },
+      "cloud_version": {
+        "name": "Verze přehrávače (cloud VNNOX)"
+      },
+      "cloud_ip": {
+        "name": "IP adresa (cloud VNNOX)"
+      }
+    },
+    "switch": {
+      "persist": {
+        "name": "Ukládat hodnoty trvale"
+      },
+      "screen": {
+        "name": "Obrazovka"
+      },
+      "brightness_schedule": {
+        "name": "Plán jasu (zařízení)"
+      },
+      "power_schedule": {
+        "name": "Plán zapnutí/vypnutí (zařízení)"
+      },
+      "relay": {
+        "name": "Relé"
+      }
+    },
+    "button": {
+      "sync_time": {
+        "name": "Synchronizovat čas"
+      },
+      "refresh_screenshot": {
+        "name": "Obnovit snímek obrazovky"
+      }
+    },
+    "image": {
+      "screenshot": {
+        "name": "Obsah obrazovky"
+      }
+    },
+    "binary_sensor": {
+      "cloud_online": {
+        "name": "Online (cloud VNNOX)"
+      }
+    }
+  }
+}

@@ -1,0 +1,185 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "LED Wall Bridge",
+        "description": "Co chcesz dodać?",
+        "menu_options": {
+          "device": "Ściana LED / kontroler (sieć lokalna)",
+          "cloud": "Konto chmury VNNOX (opcjonalne, dla wszystkich ścian)"
+        }
+      },
+      "device": {
+        "title": "Dodaj ścianę LED",
+        "description": "Łączy odtwarzacz NovaStar w sieci lokalnej (np. seria T, Taurus). Potrzebujesz tych samych danych logowania co w ViPlex Express.",
+        "data": {
+          "host": "Adres IP",
+          "sn": "Numer seryjny (SN)",
+          "username": "Nazwa użytkownika",
+          "password": "Hasło",
+          "port": "Port"
+        },
+        "data_description": {
+          "host": "Adres IP kontrolera LED w Twojej sieci, np. 192.168.1.50. Znajdziesz go w routerze lub w ViPlex Express.",
+          "sn": "Znajduje się na tabliczce kontrolera i jest widoczny w ViPlex Express.",
+          "username": "Zwykle „admin”.",
+          "password": "Hasło, którym logujesz się do kontrolera w ViPlex Express. Uwaga: po 3 błędnych próbach kontroler blokuje logowanie na 60 sekund.",
+          "port": "Zmieniaj tylko, jeśli wiesz, co robisz. Domyślnie: 16674."
+        }
+      },
+      "cloud": {
+        "title": "Połącz konto chmury VNNOX",
+        "description": "Opcjonalne. Z kontem chmury Home Assistant pokazuje też, czy Twoje ściany są online w VNNOX. Jedno konto wystarczy dla wszystkich ścian.\n\n**Skąd wziąć dane?**\n1. Otwórz NovaCloud Open Platform: Europa: {portal_eu} · USA: {portal_us}\n2. Kliknij „Log In” (w prawym górnym rogu) i zaloguj się kontem VNNOX.\n3. Otwórz kartę „Authentication” i skopiuj trzy wartości poniżej.\n\nWażne: „informacje uwierzytelniające VNNOX” (adres serwera, nazwa użytkownika/hasło uwierzytelniania) służące do powiązania odtwarzacza **nie** działają tutaj.",
+        "data": {
+          "cloud_domain": "Interface Access Domain Name",
+          "app_key": "AppKey",
+          "app_secret": "AppSecret"
+        },
+        "data_description": {
+          "cloud_domain": "Widoczne w portalu, np. open-eu.vnnox.com dla Europy.",
+          "app_key": "Widoczny w portalu w zakładce „Authentication”.",
+          "app_secret": "Widoczny w portalu w zakładce „Authentication”. Zachowaj go w tajemnicy."
+        }
+      },
+      "reauth_confirm": {
+        "title": "Zaloguj ponownie",
+        "description": "Potwierdź ponownie logowanie. Możliwe przyczyny: zmieniono hasło lub zmienił się certyfikat bezpieczeństwa kontrolera (np. po przywróceniu ustawień fabrycznych lub aktualizacji oprogramowania). Jeśli niczego nie zmieniałeś, najpierw sprawdź sieć – zmieniony certyfikat może też oznaczać, że ktoś przechwytuje połączenie.",
+        "data": {
+          "username": "Nazwa użytkownika",
+          "password": "Hasło",
+          "app_key": "AppKey",
+          "app_secret": "AppSecret"
+        }
+      },
+      "reconfigure": {
+        "title": "Zmień połączenie",
+        "data": {
+          "host": "Adres IP",
+          "port": "Port",
+          "cloud_domain": "Interface Access Domain Name"
+        },
+        "data_description": {
+          "host": "Adres IP kontrolera LED w Twojej sieci, np. 192.168.1.50. Znajdziesz go w routerze lub w ViPlex Express.",
+          "cloud_domain": "Widoczne w portalu, np. open-eu.vnnox.com dla Europy."
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Kontroler jest nieosiągalny. Sprawdź adres IP oraz czy jest włączony i w tej samej sieci.",
+      "invalid_auth": "Logowanie nie powiodło się. Sprawdź numer seryjny, nazwę użytkownika i hasło. Po 3 błędnych próbach kontroler blokuje logowanie na 60 sekund.",
+      "not_supported": "Oprogramowanie tego kontrolera nie obsługuje używanego interfejsu.",
+      "unknown": "Nieoczekiwany błąd. Szczegóły w dzienniku Home Assistant.",
+      "cloud_auth": "VNNOX odrzucił dane logowania. Sprawdź AppKey, AppSecret, a zwłaszcza domenę (np. open-eu… zamiast open-us…).",
+      "cloud_connect": "Chmura VNNOX jest nieosiągalna. Sprawdź domenę."
+    },
+    "abort": {
+      "already_configured": "To urządzenie lub konto jest już skonfigurowane.",
+      "reauth_successful": "Ponowne logowanie powiodło się.",
+      "reconfigure_successful": "Połączenie zaktualizowane."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Ustawienia",
+        "description": "Wskazówka: to, czy jasność i głośność są zapisywane na stałe, ustawiasz bezpośrednio na urządzeniu przełącznikiem „Zapisuj wartości na stałe” (w sekcji Sterowanie).\n• Włączone: ściana zachowuje wartość po restarcie lub zaniku zasilania.\n• Wyłączone: wartość obowiązuje tylko do następnego restartu. Oszczędza to pamięć kontrolera, gdy automatyzacja bardzo często zmienia jasność (np. co minutę).",
+        "data": {
+          "scan_interval": "Interwał aktualizacji (sekundy)",
+          "screenshot_interval": "Interwał zrzutów ekranu (sekundy)"
+        },
+        "data_description": {
+          "scan_interval": "Jak często Home Assistant odczytuje bieżące wartości. Domyślnie: 30.",
+          "screenshot_interval": "Jak często wykonywany jest nowy obraz ekranu. 0 = tylko po naciśnięciu „Odśwież zrzut ekranu”. Domyślnie: 60."
+        }
+      }
+    },
+    "abort": {
+      "no_options": "Konto chmury nie ma opcji."
+    }
+  },
+  "entity": {
+    "light": {
+      "led_wall": {
+        "name": "Ściana LED"
+      }
+    },
+    "number": {
+      "brightness_level": {
+        "name": "Jasność"
+      },
+      "volume": {
+        "name": "Głośność"
+      }
+    },
+    "sensor": {
+      "brightness": {
+        "name": "Aktualna jasność"
+      },
+      "brightness_raw": {
+        "name": "Jasność (wartość surowa)"
+      },
+      "firmware": {
+        "name": "Oprogramowanie"
+      },
+      "android_version": {
+        "name": "Wersja Androida"
+      },
+      "fpga_version": {
+        "name": "Wersja FPGA"
+      },
+      "resolution": {
+        "name": "Rozdzielczość"
+      },
+      "device_time": {
+        "name": "Czas urządzenia"
+      },
+      "time_zone": {
+        "name": "Strefa czasowa"
+      },
+      "cloud_last_online": {
+        "name": "Ostatnio online (chmura VNNOX)"
+      },
+      "cloud_version": {
+        "name": "Wersja odtwarzacza (chmura VNNOX)"
+      },
+      "cloud_ip": {
+        "name": "Adres IP (chmura VNNOX)"
+      }
+    },
+    "switch": {
+      "persist": {
+        "name": "Zapisuj wartości na stałe"
+      },
+      "screen": {
+        "name": "Ekran"
+      },
+      "brightness_schedule": {
+        "name": "Harmonogram jasności (urządzenie)"
+      },
+      "power_schedule": {
+        "name": "Harmonogram wł./wył. (urządzenie)"
+      },
+      "relay": {
+        "name": "Przekaźnik"
+      }
+    },
+    "button": {
+      "sync_time": {
+        "name": "Synchronizuj czas"
+      },
+      "refresh_screenshot": {
+        "name": "Odśwież zrzut ekranu"
+      }
+    },
+    "image": {
+      "screenshot": {
+        "name": "Zawartość ekranu"
+      }
+    },
+    "binary_sensor": {
+      "cloud_online": {
+        "name": "Online (chmura VNNOX)"
+      }
+    }
+  }
+}

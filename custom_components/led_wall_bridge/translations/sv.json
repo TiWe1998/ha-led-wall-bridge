@@ -1,0 +1,185 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "LED Wall Bridge",
+        "description": "Vad vill du lägga till?",
+        "menu_options": {
+          "device": "LED-vägg / styrenhet (lokalt nätverk)",
+          "cloud": "VNNOX-molnkonto (valfritt, för alla väggar)"
+        }
+      },
+      "device": {
+        "title": "Lägg till LED-vägg",
+        "description": "Ansluter en NovaStar-spelare i ditt lokala nätverk (t.ex. T-serien, Taurus). Du behöver samma inloggning som i ViPlex Express.",
+        "data": {
+          "host": "IP-adress",
+          "sn": "Serienummer (SN)",
+          "username": "Användarnamn",
+          "password": "Lösenord",
+          "port": "Port"
+        },
+        "data_description": {
+          "host": "LED-styrenhetens IP-adress i ditt nätverk, t.ex. 192.168.1.50. Du hittar den i routern eller i ViPlex Express.",
+          "sn": "Står på styrenhetens typskylt och visas i ViPlex Express.",
+          "username": "Oftast ”admin”.",
+          "password": "Lösenordet du använder för att logga in på styrenheten i ViPlex Express. Obs: efter 3 felaktiga försök spärrar styrenheten inloggning i 60 sekunder.",
+          "port": "Ändra bara om du vet vad du gör. Standard: 16674."
+        }
+      },
+      "cloud": {
+        "title": "Anslut VNNOX-molnkonto",
+        "description": "Valfritt. Med ett molnkonto visar Home Assistant även om dina väggar är online i VNNOX. Ett konto räcker för alla väggar.\n\n**Var hittar jag värdena?**\n1. Öppna NovaCloud Open Platform: Europa: {portal_eu} · USA: {portal_us}\n2. Klicka på ”Log In” (uppe till höger) och logga in med ditt VNNOX-konto.\n3. Öppna fliken ”Authentication” och kopiera de tre värdena nedan.\n\nViktigt: ”VNNOX-autentiseringsinformationen” (serveradress, autentiseringsanvändarnamn/-lösenord) som används för att koppla en spelare fungerar **inte** här.",
+        "data": {
+          "cloud_domain": "Interface Access Domain Name",
+          "app_key": "AppKey",
+          "app_secret": "AppSecret"
+        },
+        "data_description": {
+          "cloud_domain": "Visas i portalen, t.ex. open-eu.vnnox.com för Europa.",
+          "app_key": "Visas i portalen under ”Authentication”.",
+          "app_secret": "Visas i portalen under ”Authentication”. Håll den hemlig."
+        }
+      },
+      "reauth_confirm": {
+        "title": "Logga in igen",
+        "description": "Bekräfta inloggningen igen. Möjliga orsaker: lösenordet har ändrats, eller styrenhetens säkerhetscertifikat har ändrats (t.ex. efter fabriksåterställning eller firmwareuppdatering). Om du inte har ändrat något, kontrollera först ditt nätverk – ett ändrat certifikat kan också betyda att någon avlyssnar anslutningen.",
+        "data": {
+          "username": "Användarnamn",
+          "password": "Lösenord",
+          "app_key": "AppKey",
+          "app_secret": "AppSecret"
+        }
+      },
+      "reconfigure": {
+        "title": "Ändra anslutning",
+        "data": {
+          "host": "IP-adress",
+          "port": "Port",
+          "cloud_domain": "Interface Access Domain Name"
+        },
+        "data_description": {
+          "host": "LED-styrenhetens IP-adress i ditt nätverk, t.ex. 192.168.1.50. Du hittar den i routern eller i ViPlex Express.",
+          "cloud_domain": "Visas i portalen, t.ex. open-eu.vnnox.com för Europa."
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Styrenheten går inte att nå. Kontrollera IP-adressen och att den är påslagen och i samma nätverk.",
+      "invalid_auth": "Inloggningen misslyckades. Kontrollera serienummer, användarnamn och lösenord. Efter 3 felaktiga försök spärrar styrenheten inloggning i 60 sekunder.",
+      "not_supported": "Styrenhetens firmware stöder inte det gränssnitt som används.",
+      "unknown": "Oväntat fel. Detaljer finns i Home Assistant-loggen.",
+      "cloud_auth": "VNNOX nekade inloggningsuppgifterna. Kontrollera AppKey, AppSecret och särskilt domänen (t.ex. open-eu… i stället för open-us…).",
+      "cloud_connect": "VNNOX-molnet går inte att nå. Kontrollera domänen."
+    },
+    "abort": {
+      "already_configured": "Den här enheten eller kontot är redan konfigurerat.",
+      "reauth_successful": "Inloggad igen.",
+      "reconfigure_successful": "Anslutningen uppdaterad."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Inställningar",
+        "description": "Tips: om ljusstyrka och volym sparas permanent ställer du in direkt på enheten med brytaren ”Spara värden permanent” (under Kontroller).\n• På: väggen behåller värdet efter omstart eller strömavbrott.\n• Av: värdet gäller bara till nästa omstart. Det sparar styrenhetens minne om en automation ändrar ljusstyrkan mycket ofta (t.ex. varje minut).",
+        "data": {
+          "scan_interval": "Uppdateringsintervall (sekunder)",
+          "screenshot_interval": "Skärmdumpsintervall (sekunder)"
+        },
+        "data_description": {
+          "scan_interval": "Hur ofta Home Assistant läser de aktuella värdena. Standard: 30.",
+          "screenshot_interval": "Hur ofta en ny bild av skärmen tas. 0 = bara när du trycker på ”Uppdatera skärmdump”. Standard: 60."
+        }
+      }
+    },
+    "abort": {
+      "no_options": "Molnkontot har inga alternativ."
+    }
+  },
+  "entity": {
+    "light": {
+      "led_wall": {
+        "name": "LED-vägg"
+      }
+    },
+    "number": {
+      "brightness_level": {
+        "name": "Ljusstyrka"
+      },
+      "volume": {
+        "name": "Volym"
+      }
+    },
+    "sensor": {
+      "brightness": {
+        "name": "Aktuell ljusstyrka"
+      },
+      "brightness_raw": {
+        "name": "Ljusstyrka (råvärde)"
+      },
+      "firmware": {
+        "name": "Firmware"
+      },
+      "android_version": {
+        "name": "Android-version"
+      },
+      "fpga_version": {
+        "name": "FPGA-version"
+      },
+      "resolution": {
+        "name": "Upplösning"
+      },
+      "device_time": {
+        "name": "Enhetens tid"
+      },
+      "time_zone": {
+        "name": "Tidszon"
+      },
+      "cloud_last_online": {
+        "name": "Senast online (VNNOX-molnet)"
+      },
+      "cloud_version": {
+        "name": "Spelarversion (VNNOX-molnet)"
+      },
+      "cloud_ip": {
+        "name": "IP-adress (VNNOX-molnet)"
+      }
+    },
+    "switch": {
+      "persist": {
+        "name": "Spara värden permanent"
+      },
+      "screen": {
+        "name": "Skärm"
+      },
+      "brightness_schedule": {
+        "name": "Ljusstyrkeschema (enhet)"
+      },
+      "power_schedule": {
+        "name": "På/av-schema (enhet)"
+      },
+      "relay": {
+        "name": "Relä"
+      }
+    },
+    "button": {
+      "sync_time": {
+        "name": "Synkronisera tid"
+      },
+      "refresh_screenshot": {
+        "name": "Uppdatera skärmdump"
+      }
+    },
+    "image": {
+      "screenshot": {
+        "name": "Skärminnehåll"
+      }
+    },
+    "binary_sensor": {
+      "cloud_online": {
+        "name": "Online (VNNOX-molnet)"
+      }
+    }
+  }
+}
