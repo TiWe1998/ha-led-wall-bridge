@@ -1,0 +1,5 @@
+{
+  "name": "LED Wall Bridge",
+  "homeassistant": "2024.11.0",
+  "render_readme": true
+}

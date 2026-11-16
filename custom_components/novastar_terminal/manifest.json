@@ -1,0 +1,14 @@
+{
+  "domain": "novastar_terminal",
+  "name": "LED Wall Bridge",
+  "codeowners": [
+    "@GITHUB_USER"
+  ],
+  "config_flow": true,
+  "documentation": "https://github.com/GITHUB_USER/ha-led-wall-bridge",
+  "integration_type": "device",
+  "iot_class": "local_polling",
+  "issue_tracker": "https://github.com/GITHUB_USER/ha-led-wall-bridge/issues",
+  "requirements": [],
+  "version": "1.2.0"
+}

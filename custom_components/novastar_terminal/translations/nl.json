@@ -1,0 +1,185 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "LED Wall Bridge",
+        "description": "Wat wil je toevoegen?",
+        "menu_options": {
+          "device": "LED-wall / controller (lokaal netwerk)",
+          "cloud": "VNNOX-cloudaccount (optioneel, voor alle walls)"
+        }
+      },
+      "device": {
+        "title": "LED-wall toevoegen",
+        "description": "Verbindt een NovaStar-player in je lokale netwerk (bijv. T-serie, Taurus). Je hebt dezelfde inloggegevens nodig als in ViPlex Express.",
+        "data": {
+          "host": "IP-adres",
+          "sn": "Serienummer (SN)",
+          "username": "Gebruikersnaam",
+          "password": "Wachtwoord",
+          "port": "Poort"
+        },
+        "data_description": {
+          "host": "Het IP-adres van de LED-controller in je netwerk, bijv. 192.168.1.50. Je vindt het in je router of in ViPlex Express.",
+          "sn": "Staat op het typeplaatje van de controller en wordt getoond in ViPlex Express.",
+          "username": "Meestal ‘admin’.",
+          "password": "Het wachtwoord waarmee je in ViPlex Express op de controller inlogt. Let op: na 3 foute pogingen blokkeert de controller het inloggen 60 seconden.",
+          "port": "Alleen wijzigen als je weet wat je doet. Standaard: 16674."
+        }
+      },
+      "cloud": {
+        "title": "VNNOX-cloudaccount koppelen",
+        "description": "Optioneel. Met een cloudaccount toont Home Assistant ook of je walls in VNNOX online zijn. Eén account is genoeg voor alle walls.\n\n**Waar vind ik de waarden?**\n1. Open het NovaCloud Open Platform: Europa: {portal_eu} · VS: {portal_us}\n2. Klik rechtsboven op ‘Log In’ en meld je aan met je VNNOX-account.\n3. Open het tabblad ‘Authentication’ en neem de drie waarden hieronder over.\n\nBelangrijk: de ‘VNNOX-authenticatiegegevens’ (serveradres, authenticatie-gebruikersnaam/-wachtwoord) om een player te koppelen werken hier **niet**.",
+        "data": {
+          "cloud_domain": "Interface Access Domain Name",
+          "app_key": "AppKey",
+          "app_secret": "AppSecret"
+        },
+        "data_description": {
+          "cloud_domain": "Staat in het portaal, bijv. open-eu.vnnox.com voor Europa.",
+          "app_key": "Staat in het portaal onder ‘Authentication’.",
+          "app_secret": "Staat in het portaal onder ‘Authentication’. Houd dit geheim."
+        }
+      },
+      "reauth_confirm": {
+        "title": "Opnieuw inloggen",
+        "description": "Het inloggen is geweigerd. Voer de actuele inloggegevens in.",
+        "data": {
+          "username": "Gebruikersnaam",
+          "password": "Wachtwoord",
+          "app_key": "AppKey",
+          "app_secret": "AppSecret"
+        }
+      },
+      "reconfigure": {
+        "title": "Verbinding wijzigen",
+        "data": {
+          "host": "IP-adres",
+          "port": "Poort",
+          "cloud_domain": "Interface Access Domain Name"
+        },
+        "data_description": {
+          "host": "Het IP-adres van de LED-controller in je netwerk, bijv. 192.168.1.50. Je vindt het in je router of in ViPlex Express.",
+          "cloud_domain": "Staat in het portaal, bijv. open-eu.vnnox.com voor Europa."
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "De controller is niet bereikbaar. Controleer het IP-adres en of hij aan staat en in hetzelfde netwerk zit.",
+      "invalid_auth": "Inloggen mislukt. Controleer serienummer, gebruikersnaam en wachtwoord. Na 3 foute pogingen blokkeert de controller het inloggen 60 seconden.",
+      "not_supported": "De firmware van deze controller ondersteunt de gebruikte interface niet.",
+      "unknown": "Onverwachte fout. Details staan in het Home Assistant-logboek.",
+      "cloud_auth": "VNNOX weigert de inloggegevens. Controleer AppKey, AppSecret en vooral het domein (bijv. open-eu… in plaats van open-us…).",
+      "cloud_connect": "De VNNOX-cloud is niet bereikbaar. Controleer het domein."
+    },
+    "abort": {
+      "already_configured": "Dit apparaat of account is al ingesteld.",
+      "reauth_successful": "Opnieuw ingelogd.",
+      "reconfigure_successful": "Verbinding bijgewerkt."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Instellingen",
+        "description": "Tip: of helderheid en volume permanent worden opgeslagen, stel je direct op het apparaat in met de schakelaar ‘Waarden permanent opslaan’ (onder Bediening).\n• Aan: de wall behoudt de waarde na een herstart of stroomstoring.\n• Uit: de waarde geldt alleen tot de volgende herstart. Dat spaart het geheugen van de controller als een automatisering de helderheid heel vaak wijzigt (bijv. elke minuut).",
+        "data": {
+          "scan_interval": "Update-interval (seconden)",
+          "screenshot_interval": "Screenshot-interval (seconden)"
+        },
+        "data_description": {
+          "scan_interval": "Hoe vaak Home Assistant de actuele waarden uitleest. Standaard: 30.",
+          "screenshot_interval": "Hoe vaak een nieuwe afbeelding van het scherm wordt gemaakt. 0 = alleen via ‘Screenshot vernieuwen’. Standaard: 60."
+        }
+      }
+    },
+    "abort": {
+      "no_options": "Het cloudaccount heeft geen opties."
+    }
+  },
+  "entity": {
+    "light": {
+      "led_wall": {
+        "name": "LED-wall"
+      }
+    },
+    "number": {
+      "brightness_level": {
+        "name": "Helderheid"
+      },
+      "volume": {
+        "name": "Volume"
+      }
+    },
+    "sensor": {
+      "brightness": {
+        "name": "Huidige helderheid"
+      },
+      "brightness_raw": {
+        "name": "Helderheid (ruwe waarde)"
+      },
+      "firmware": {
+        "name": "Firmware"
+      },
+      "android_version": {
+        "name": "Android-versie"
+      },
+      "fpga_version": {
+        "name": "FPGA-versie"
+      },
+      "resolution": {
+        "name": "Resolutie"
+      },
+      "device_time": {
+        "name": "Apparaattijd"
+      },
+      "time_zone": {
+        "name": "Tijdzone"
+      },
+      "cloud_last_online": {
+        "name": "Laatst online (VNNOX-cloud)"
+      },
+      "cloud_version": {
+        "name": "Playerversie (VNNOX-cloud)"
+      },
+      "cloud_ip": {
+        "name": "IP-adres (VNNOX-cloud)"
+      }
+    },
+    "switch": {
+      "persist": {
+        "name": "Waarden permanent opslaan"
+      },
+      "screen": {
+        "name": "Scherm"
+      },
+      "brightness_schedule": {
+        "name": "Helderheidsschema (apparaat)"
+      },
+      "power_schedule": {
+        "name": "Aan/uit-schema (apparaat)"
+      },
+      "relay": {
+        "name": "Relais"
+      }
+    },
+    "button": {
+      "sync_time": {
+        "name": "Tijd synchroniseren"
+      },
+      "refresh_screenshot": {
+        "name": "Screenshot vernieuwen"
+      }
+    },
+    "image": {
+      "screenshot": {
+        "name": "Scherminhoud"
+      }
+    },
+    "binary_sensor": {
+      "cloud_online": {
+        "name": "Online (VNNOX-cloud)"
+      }
+    }
+  }
+}
