@@ -7,7 +7,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers import device_registry as dr
 from pytest_homeassistant_custom_component.common import MockConfigEntry
 
-from custom_components.novastar_terminal.const import DOMAIN
+from custom_components.led_wall_bridge.const import DOMAIN
 
 BASE = "https://192.0.2.10:16674/terminal"
 CLOUD = "https://open-us.vnnox.com"
@@ -202,7 +202,7 @@ async def test_options_flow(hass: HomeAssistant, aioclient_mock):
 
 
 def test_translations_complete():
-    base = Path(__file__).parents[1] / "custom_components" / "novastar_terminal"
+    base = Path(__file__).parents[1] / "custom_components" / "led_wall_bridge"
     ref = json.loads((base / "strings.json").read_text())
 
     def keys(d, p=""):
@@ -264,8 +264,8 @@ async def test_certificate_change_triggers_reauth(hass: HomeAssistant, aioclient
 
 
 async def test_oversized_screenshot_rejected(hass: HomeAssistant, aioclient_mock, monkeypatch):
-    from custom_components.novastar_terminal import api as api_mod
-    from custom_components.novastar_terminal.api import NovastarError, NovastarTerminalApi
+    from custom_components.led_wall_bridge import api as api_mod
+    from custom_components.led_wall_bridge.api import NovastarError, NovastarTerminalApi
     from homeassistant.helpers.aiohttp_client import async_get_clientsession
     import pytest
 
@@ -278,7 +278,7 @@ async def test_oversized_screenshot_rejected(hass: HomeAssistant, aioclient_mock
 
 def test_fingerprint_is_used_for_tls():
     import aiohttp
-    from custom_components.novastar_terminal.api import NovastarTerminalApi
+    from custom_components.led_wall_bridge.api import NovastarTerminalApi
 
     client = NovastarTerminalApi(None, "h", 1, "u", "p", "s", "ab" * 32)
     assert isinstance(client._ssl, aiohttp.Fingerprint)
@@ -295,7 +295,7 @@ async def test_short_device_hiccup_keeps_values(hass: HomeAssistant, aioclient_m
         m.method == "get" and str(m._url).endswith("/core/v1/brightness"))]
     aioclient_mock.get(f"{BASE}/core/v1/brightness", json={"code": 2, "message": "appService is null"})
     from unittest.mock import patch
-    with patch("custom_components.novastar_terminal.api.asyncio.sleep"):
+    with patch("custom_components.led_wall_bridge.api.asyncio.sleep"):
         await coordinator.async_refresh()
     assert coordinator.last_update_success
     assert hass.states.get("light.demo_led_wall").state == "on"

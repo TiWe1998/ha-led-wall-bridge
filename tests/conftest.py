@@ -32,9 +32,9 @@ def mock_cert_fingerprint():
     from unittest.mock import patch
 
     with patch(
-        "custom_components.novastar_terminal.async_get_cert_fingerprint", return_value=FINGERPRINT
+        "custom_components.led_wall_bridge.async_get_cert_fingerprint", return_value=FINGERPRINT
     ), patch(
-        "custom_components.novastar_terminal.config_flow.async_get_cert_fingerprint",
+        "custom_components.led_wall_bridge.config_flow.async_get_cert_fingerprint",
         return_value=FINGERPRINT,
     ):
         yield FINGERPRINT
