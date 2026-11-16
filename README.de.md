@@ -4,9 +4,9 @@
 
 **Inoffizielle Home-Assistant-Integration für NovaStar-LED-Player und -Controller**
 
-[![GitHub Release](https://img.shields.io/github/v/release/GITHUB_USER/ha-led-wall-bridge)](https://github.com/GITHUB_USER/ha-led-wall-bridge/releases)
+[![GitHub Release](https://img.shields.io/github/v/release/TiWe1998/ha-led-wall-bridge)](https://github.com/TiWe1998/ha-led-wall-bridge/releases)
 [![HACS](https://img.shields.io/badge/HACS-Custom-41BDF5.svg)](https://hacs.xyz/)
-[![Validate](https://github.com/GITHUB_USER/ha-led-wall-bridge/actions/workflows/validate.yml/badge.svg)](https://github.com/GITHUB_USER/ha-led-wall-bridge/actions/workflows/validate.yml)
+[![Validate](https://github.com/TiWe1998/ha-led-wall-bridge/actions/workflows/validate.yml/badge.svg)](https://github.com/TiWe1998/ha-led-wall-bridge/actions/workflows/validate.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 🇬🇧 [English](README.md)
@@ -15,7 +15,7 @@ Steuere deine LED-Walls mit NovaStar-Playern (z. B. **T-Serie**, **Taurus**) dir
 Assistant – Helligkeit, Lautstärke, Screenshots, Zeitpläne und mehr. Alles läuft **lokal in deinem
 Netzwerk**; ein VNNOX-Cloud-Konto ist optional.
 
-[![Open your Home Assistant instance and open this repository in HACS.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=GITHUB_USER&repository=ha-led-wall-bridge&category=integration)
+[![Open your Home Assistant instance and open this repository in HACS.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=TiWe1998&repository=ha-led-wall-bridge&category=integration)
 
 > ℹ️ Dies ist ein Community-Projekt und steht **in keiner Verbindung zu NovaStar** – es wird von
 > NovaStar weder unterstützt noch empfohlen. NovaStar, VNNOX, ViPlex und Taurus sind Marken ihrer
@@ -54,7 +54,7 @@ Standorte im Blick zu behalten.
 
 ### Mit HACS (empfohlen)
 
-**Mit einem Klick:** [![Open your Home Assistant instance and open this repository in HACS.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=GITHUB_USER&repository=ha-led-wall-bridge&category=integration)
+**Mit einem Klick:** [![Open your Home Assistant instance and open this repository in HACS.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=TiWe1998&repository=ha-led-wall-bridge&category=integration)
 
 oder von Hand:
 

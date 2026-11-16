@@ -27,7 +27,7 @@ CLOUD_SCAN_INTERVAL = 300
 
 PORTAL_URL_EU = "https://open-eu.vnnox.com"
 PORTAL_URL_US = "https://open-us.vnnox.com"
-DOCS_URL = "https://github.com/GITHUB_USER/ha-led-wall-bridge"
+DOCS_URL = "https://github.com/TiWe1998/ha-led-wall-bridge"
 
 # Feature key -> GET path used for automatic feature detection
 FEATURE_PATHS: dict[str, str] = {
