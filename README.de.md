@@ -1,4 +1,4 @@
-<p align="center"><img src="brand/icon.png" width="128" alt="LED Wall Bridge"></p>
+<p align="center"><img src="custom_components/led_wall_bridge/brand/icon.png" width="128" alt="LED Wall Bridge"></p>
 
 # LED Wall Bridge
 
@@ -65,7 +65,7 @@ oder von Hand:
 5. Home Assistant **neu starten** (Einstellungen → System → oben rechts ⏻ → Neu starten).
 
 ### Manuell
-Den Ordner `custom_components/novastar_terminal` in den Ordner `custom_components` deiner
+Den Ordner `custom_components/led_wall_bridge` in den Ordner `custom_components` deiner
 Home-Assistant-Konfiguration kopieren und Home Assistant neu starten.
 
 ---
@@ -80,7 +80,7 @@ Home-Assistant-Konfiguration kopieren und Home Assistant neu starten.
 
 **Schritte:**
 
-[![Open your Home Assistant instance and start setting up LED Wall Bridge.](https://my.home-assistant.io/badges/config_flow_start.svg)](https://my.home-assistant.io/redirect/config_flow_start/?domain=novastar_terminal)
+[![Open your Home Assistant instance and start setting up LED Wall Bridge.](https://my.home-assistant.io/badges/config_flow_start.svg)](https://my.home-assistant.io/redirect/config_flow_start/?domain=led_wall_bridge)
 
 oder von Hand:
 1. **Einstellungen → Geräte & Dienste → Integration hinzufügen**.
@@ -187,7 +187,7 @@ Ausführliches Logging einschalten (in `configuration.yaml` eintragen, dann neu 
 ```yaml
 logger:
   logs:
-    custom_components.novastar_terminal: debug
+    custom_components.led_wall_bridge: debug
 ```
 
 Geräteseite → **⋮ → Diagnose herunterladen** erstellt eine Datei für Fehlermeldungen (Passwörter,
