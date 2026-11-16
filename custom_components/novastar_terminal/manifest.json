@@ -2,7 +2,7 @@
   "domain": "novastar_terminal",
   "name": "LED Wall Bridge",
   "codeowners": [
-    "@GITHUB_USER"
+    "@TiWe1998"
   ],
   "config_flow": true,
   "documentation": "https://github.com/GITHUB_USER/ha-led-wall-bridge",
