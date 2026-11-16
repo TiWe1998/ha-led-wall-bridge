@@ -10,11 +10,18 @@ from homeassistant.exceptions import ConfigEntryAuthFailed, ConfigEntryNotReady
 from homeassistant.helpers import entity_registry as er
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 
-from .api import NovastarAuthError, NovastarError, NovastarTerminalApi
+from .api import (
+    NovastarAuthError,
+    NovastarCertificateError,
+    NovastarError,
+    NovastarTerminalApi,
+    async_get_cert_fingerprint,
+)
 from .cloud import NovastarCloudCoordinator, VnnoxCloudApi
 from .const import (
     CONF_APP_KEY,
     CONF_APP_SECRET,
+    CONF_CERT_FINGERPRINT,
     CONF_CLOUD_DOMAIN,
     CONF_ENTRY_TYPE,
     CONF_PERSIST,
@@ -63,6 +70,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: NovastarConfigEntry) -> 
     else:
         _migrate_legacy_cloud_options(hass, entry)
         _remove_legacy_cloud_entities(hass, entry)
+        await _ensure_fingerprint(hass, entry)
         api = NovastarTerminalApi(
             async_get_clientsession(hass, verify_ssl=False),
             entry.data[CONF_HOST],
@@ -70,10 +78,11 @@ async def async_setup_entry(hass: HomeAssistant, entry: NovastarConfigEntry) -> 
             entry.data[CONF_USERNAME],
             entry.data[CONF_PASSWORD],
             entry.data.get(CONF_SN),
+            entry.data.get(CONF_CERT_FINGERPRINT),
         )
         try:
             await api.async_fetch_device_info()
-        except NovastarAuthError as err:
+        except (NovastarAuthError, NovastarCertificateError) as err:
             raise ConfigEntryAuthFailed(str(err)) from err
         except NovastarError as err:
             raise ConfigEntryNotReady(str(err)) from err
@@ -86,6 +95,25 @@ async def async_setup_entry(hass: HomeAssistant, entry: NovastarConfigEntry) -> 
     await hass.config_entries.async_forward_entry_setups(entry, _platforms(entry))
     entry.async_on_unload(entry.add_update_listener(_async_reload))
     return True
+
+
+async def _ensure_fingerprint(hass: HomeAssistant, entry: ConfigEntry) -> None:
+    """Entries created before version 1.2.1 have no pinned certificate yet.
+
+    Pin the certificate the device presents now (trust on first use).
+    """
+    if entry.data.get(CONF_CERT_FINGERPRINT):
+        return
+    try:
+        fingerprint = await async_get_cert_fingerprint(
+            entry.data[CONF_HOST], entry.data[CONF_PORT]
+        )
+    except NovastarError as err:
+        raise ConfigEntryNotReady(str(err)) from err
+    hass.config_entries.async_update_entry(
+        entry, data={**entry.data, CONF_CERT_FINGERPRINT: fingerprint}
+    )
+    _LOGGER.info("Pinned TLS certificate of %s", entry.data[CONF_HOST])
 
 
 def _migrate_legacy_cloud_options(hass: HomeAssistant, entry: ConfigEntry) -> None:

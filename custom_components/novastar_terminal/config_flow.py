@@ -19,11 +19,13 @@ from .api import (
     NovastarError,
     NovastarNotSupported,
     NovastarTerminalApi,
+    async_get_cert_fingerprint,
 )
 from .cloud import VnnoxCloudApi, VnnoxCloudAuthError, VnnoxCloudError, normalize_domain
 from .const import (
     CONF_APP_KEY,
     CONF_APP_SECRET,
+    CONF_CERT_FINGERPRINT,
     CONF_CLOUD_DOMAIN,
     CONF_ENTRY_TYPE,
     CONF_SCAN_INTERVAL,
@@ -71,13 +73,28 @@ def _cloud_schema(d: Mapping[str, Any]) -> vol.Schema:
 async def _validate_device(
     hass: HomeAssistant, data: Mapping[str, Any]
 ) -> tuple[NovastarTerminalApi | None, str | None]:
+    """Pin the certificate the device presents now and log in with it.
+
+    Called during setup, re-authentication and reconfiguration, i.e. whenever the
+    user actively confirms the device.
+    """
+    host = data[CONF_HOST].strip()
+    try:
+        fingerprint = await async_get_cert_fingerprint(host, data[CONF_PORT])
+    except NovastarConnectionError as err:
+        _LOGGER.warning("Connection failed: %s", err)
+        return None, "cannot_connect"
+    except NovastarError as err:
+        _LOGGER.warning("Could not read the device certificate: %s", err)
+        return None, "cannot_connect"
     api = NovastarTerminalApi(
         async_get_clientsession(hass, verify_ssl=False),
-        data[CONF_HOST].strip(),
+        host,
         data[CONF_PORT],
         data[CONF_USERNAME],
         data[CONF_PASSWORD],
         data[CONF_SN].strip().upper(),
+        fingerprint,
     )
     try:
         await api.async_login()
@@ -145,6 +162,7 @@ class NovastarConfigFlow(ConfigFlow, domain=DOMAIN):
                         CONF_ENTRY_TYPE: ENTRY_TYPE_DEVICE,
                         CONF_HOST: api.host,
                         CONF_SN: api.sn,
+                        CONF_CERT_FINGERPRINT: api.fingerprint,
                     },
                 )
         return self.async_show_form(
@@ -204,7 +222,9 @@ class NovastarConfigFlow(ConfigFlow, domain=DOMAIN):
             if cloud:
                 error = await _validate_cloud(self.hass, data)
             else:
-                _, error = await _validate_device(self.hass, data)
+                api, error = await _validate_device(self.hass, data)
+                if api:
+                    data[CONF_CERT_FINGERPRINT] = api.fingerprint
             if error:
                 errors["base"] = error
             else:
@@ -242,7 +262,9 @@ class NovastarConfigFlow(ConfigFlow, domain=DOMAIN):
                 data[CONF_CLOUD_DOMAIN] = normalize_domain(data[CONF_CLOUD_DOMAIN])
                 error = await _validate_cloud(self.hass, data)
             else:
-                _, error = await _validate_device(self.hass, data)
+                api, error = await _validate_device(self.hass, data)
+                if api:
+                    data[CONF_CERT_FINGERPRINT] = api.fingerprint
             if error:
                 errors["base"] = error
             else:

@@ -175,6 +175,11 @@ actions:
 mode: restart
 ```
 
+## Sicherheit
+
+In [SECURITY.md](SECURITY.md) steht, wie die Integration deine Daten schützt und wie du
+Sicherheitslücken vertraulich meldest.
+
 ## Fehlersuche
 
 Ausführliches Logging einschalten (in `configuration.yaml` eintragen, dann neu starten):

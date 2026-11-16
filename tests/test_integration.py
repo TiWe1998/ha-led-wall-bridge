@@ -64,7 +64,7 @@ def mock_cloud(m, status=200):
 
 async def setup_device(hass, m, options=None):
     mock_device(m)
-    entry = MockConfigEntry(domain=DOMAIN, unique_id=SN, data=DEVICE_DATA, options=options or {})
+    entry = MockConfigEntry(domain=DOMAIN, unique_id=SN, title="Demo-LED-Wall", data=DEVICE_DATA, options=options or {})
     entry.add_to_hass(hass)
     assert await hass.config_entries.async_setup(entry.entry_id)
     await hass.async_block_till_done()
@@ -228,3 +228,74 @@ async def test_legacy_cloud_entities_removed(hass: HomeAssistant, aioclient_mock
     assert await hass.config_entries.async_setup(entry.entry_id)
     await hass.async_block_till_done()
     assert reg.async_get_entity_id("binary_sensor", DOMAIN, f"{SN}_cloud_online") is None
+
+
+
+async def test_certificate_pinned_on_first_setup(hass: HomeAssistant, aioclient_mock):
+    """Entries from older versions get the certificate pinned (trust on first use)."""
+    entry = await setup_device(hass, aioclient_mock)
+    assert entry.data["cert_fingerprint"] == "ab" * 32
+
+
+async def test_config_flow_stores_fingerprint(hass: HomeAssistant, aioclient_mock):
+    mock_device(aioclient_mock)
+    result = await hass.config_entries.flow.async_init(DOMAIN, context={"source": "user"})
+    result = await hass.config_entries.flow.async_configure(result["flow_id"], {"next_step_id": "device"})
+    result = await hass.config_entries.flow.async_configure(result["flow_id"], {
+        "host": "192.0.2.10", "port": 16674, "sn": SN, "username": "admin", "password": "x"})
+    assert result["data"]["cert_fingerprint"] == "ab" * 32
+
+
+async def test_certificate_change_triggers_reauth(hass: HomeAssistant, aioclient_mock):
+    """A changed certificate must stop communication and ask the user."""
+    import aiohttp
+
+    aioclient_mock.get(f"{BASE}/core/v2/device/info",
+                       exc=aiohttp.ServerFingerprintMismatch(b"a" * 32, b"b" * 32, "192.0.2.10", 16674))
+    aioclient_mock.post(f"{BASE}/core/v1/user/login", json=ok({"token": "abc"}))
+    entry = MockConfigEntry(domain=DOMAIN, unique_id=SN,
+                            data={**DEVICE_DATA, "cert_fingerprint": "cd" * 32})
+    entry.add_to_hass(hass)
+    await hass.config_entries.async_setup(entry.entry_id)
+    await hass.async_block_till_done()
+    assert entry.state is ConfigEntryState.SETUP_ERROR
+    flows = hass.config_entries.flow.async_progress()
+    assert any(f["context"]["source"] == "reauth" for f in flows)
+
+
+async def test_oversized_screenshot_rejected(hass: HomeAssistant, aioclient_mock, monkeypatch):
+    from custom_components.novastar_terminal import api as api_mod
+    from custom_components.novastar_terminal.api import NovastarError, NovastarTerminalApi
+    from homeassistant.helpers.aiohttp_client import async_get_clientsession
+    import pytest
+
+    monkeypatch.setattr(api_mod, "MAX_SCREENSHOT_BYTES", 16)
+    mock_device(aioclient_mock)
+    client = NovastarTerminalApi(async_get_clientsession(hass), "192.0.2.10", 16674, "admin", "x", SN)
+    with pytest.raises(NovastarError, match="too large"):
+        await client.async_screenshot()
+
+
+def test_fingerprint_is_used_for_tls():
+    import aiohttp
+    from custom_components.novastar_terminal.api import NovastarTerminalApi
+
+    client = NovastarTerminalApi(None, "h", 1, "u", "p", "s", "ab" * 32)
+    assert isinstance(client._ssl, aiohttp.Fingerprint)
+    assert NovastarTerminalApi(None, "h", 1, "u", "p", "s")._ssl is False
+
+
+async def test_short_device_hiccup_keeps_values(hass: HomeAssistant, aioclient_mock):
+    """A brief 'appService is null' must not make the wall unavailable."""
+    entry = await setup_device(hass, aioclient_mock)
+    coordinator = entry.runtime_data
+    aioclient_mock.clear_requests()
+    mock_device(aioclient_mock)
+    aioclient_mock._mocks = [m for m in aioclient_mock._mocks if not (
+        m.method == "get" and str(m._url).endswith("/core/v1/brightness"))]
+    aioclient_mock.get(f"{BASE}/core/v1/brightness", json={"code": 2, "message": "appService is null"})
+    from unittest.mock import patch
+    with patch("custom_components.novastar_terminal.api.asyncio.sleep"):
+        await coordinator.async_refresh()
+    assert coordinator.last_update_success
+    assert hass.states.get("light.demo_led_wall").state == "on"

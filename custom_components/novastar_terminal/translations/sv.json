@@ -43,7 +43,7 @@
       },
       "reauth_confirm": {
         "title": "Logga in igen",
-        "description": "Inloggningen nekades. Ange aktuella inloggningsuppgifter.",
+        "description": "Bekräfta inloggningen igen. Möjliga orsaker: lösenordet har ändrats, eller styrenhetens säkerhetscertifikat har ändrats (t.ex. efter fabriksåterställning eller firmwareuppdatering). Om du inte har ändrat något, kontrollera först ditt nätverk – ett ändrat certifikat kan också betyda att någon avlyssnar anslutningen.",
         "data": {
           "username": "Användarnamn",
           "password": "Lösenord",

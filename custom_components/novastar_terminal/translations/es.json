@@ -43,7 +43,7 @@
       },
       "reauth_confirm": {
         "title": "Volver a iniciar sesión",
-        "description": "Se rechazó el inicio de sesión. Introduce los datos de acceso actuales.",
+        "description": "Vuelve a confirmar el inicio de sesión. Posibles motivos: se cambió la contraseña o cambió el certificado de seguridad del controlador (p. ej. tras un restablecimiento de fábrica o una actualización de firmware). Si no has cambiado nada, revisa primero tu red: un certificado distinto también puede indicar que alguien está interceptando la conexión.",
         "data": {
           "username": "Usuario",
           "password": "Contraseña",

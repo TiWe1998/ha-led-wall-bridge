@@ -43,7 +43,7 @@
       },
       "reauth_confirm": {
         "title": "Log ind igen",
-        "description": "Login blev afvist. Indtast de aktuelle loginoplysninger.",
+        "description": "Bekræft login igen. Mulige årsager: adgangskoden er ændret, eller controllerens sikkerhedscertifikat er ændret (f.eks. efter en fabriksnulstilling eller firmwareopdatering). Hvis du ikke har ændret noget, så tjek først dit netværk – et ændret certifikat kan også betyde, at nogen opsnapper forbindelsen.",
         "data": {
           "username": "Brugernavn",
           "password": "Adgangskode",

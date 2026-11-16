@@ -187,6 +187,11 @@ logger:
 Device page → **⋮ → Download diagnostics** creates a file for bug reports (passwords, serial numbers
 and keys are removed automatically).
 
+## Security
+
+See [SECURITY.md](SECURITY.md) for how the integration protects your data and how to report
+vulnerabilities privately.
+
 ## For developers
 
 ```bash

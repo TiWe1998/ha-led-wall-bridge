@@ -43,7 +43,7 @@
       },
       "reauth_confirm": {
         "title": "Entrar novamente",
-        "description": "O login foi recusado. Informe os dados de acesso atuais.",
+        "description": "Confirme o login novamente. Possíveis motivos: a senha foi alterada ou o certificado de segurança do controlador mudou (ex.: após restauração de fábrica ou atualização de firmware). Se você não alterou nada, verifique primeiro sua rede – um certificado diferente também pode significar que alguém está interceptando a conexão.",
         "data": {
           "username": "Usuário",
           "password": "Senha",

@@ -3,7 +3,6 @@ from __future__ import annotations
 
 from typing import Any
 
-from homeassistant.helpers import device_registry as dr
 from homeassistant.helpers.device_registry import CONNECTION_NETWORK_MAC, DeviceInfo
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
@@ -56,15 +55,15 @@ class NovastarCloudEntity(CoordinatorEntity[NovastarCloudCoordinator]):
         self._sn = sn
         self._attr_unique_id = f"cloud_{sn}_{key}"
         player = coordinator.data.get(sn, {})
-        # If the wall is also set up locally, reuse its name and model. Depending on
-        # the Home Assistant version the cloud entities then either appear on the same
-        # device or on a linked device with the same name.
-        existing = dr.async_get(coordinator.hass).async_get_device(identifiers={(DOMAIN, sn)})
+        # If the wall is also set up locally, use the name of that entry so the cloud
+        # entities appear under the same name (on the same or a linked device,
+        # depending on the Home Assistant version).
+        local = coordinator.hass.config_entries.async_entry_for_domain_unique_id(DOMAIN, sn)
         self._attr_device_info = DeviceInfo(
             identifiers={(DOMAIN, sn)},
-            manufacturer=(existing.manufacturer if existing else None) or "NovaStar",
-            model=(existing.model if existing else None) or "VNNOX player",
-            name=(existing.name if existing else None) or str(player.get("name") or sn),
+            manufacturer="NovaStar",
+            model="VNNOX player",
+            name=(local.title if local else None) or str(player.get("name") or sn),
             serial_number=sn,
         )
 

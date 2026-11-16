@@ -43,7 +43,7 @@
       },
       "reauth_confirm": {
         "title": "Se reconnecter",
-        "description": "La connexion a été refusée. Veuillez saisir les identifiants actuels.",
+        "description": "Veuillez confirmer à nouveau la connexion. Raisons possibles : le mot de passe a été modifié, ou le certificat de sécurité du contrôleur a changé (p. ex. après une réinitialisation ou une mise à jour du firmware). Si vous n'avez rien modifié, vérifiez d'abord votre réseau – un certificat modifié peut aussi signifier que quelqu'un intercepte la connexion.",
         "data": {
           "username": "Nom d'utilisateur",
           "password": "Mot de passe",

@@ -2,11 +2,15 @@
 from __future__ import annotations
 
 import asyncio
+import hashlib
 import json
 import logging
+import ssl
 from typing import Any
 
 import aiohttp
+
+from .const import MAX_JSON_BYTES, MAX_SCREENSHOT_BYTES
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -28,6 +32,10 @@ class NovastarConnectionError(NovastarError):
 
 class NovastarAuthError(NovastarError):
     """Login failed."""
+
+
+class NovastarCertificateError(NovastarError):
+    """The TLS certificate of the device does not match the stored fingerprint."""
 
 
 class NovastarNotSupported(NovastarError):
@@ -69,6 +77,51 @@ def find_key(obj: Any, keys: tuple[str, ...]) -> Any:
     return None
 
 
+def _no_verify_context() -> ssl.SSLContext:
+    """TLS context without CA verification (the device uses a self-signed certificate).
+
+    Authenticity is ensured by certificate pinning instead (see fingerprint).
+    """
+    ctx = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
+    ctx.check_hostname = False
+    ctx.verify_mode = ssl.CERT_NONE
+    return ctx
+
+
+async def async_get_cert_fingerprint(host: str, port: int, timeout: float = 10) -> str:
+    """Return the SHA-256 fingerprint (hex) of the device's TLS certificate."""
+    try:
+        _, writer = await asyncio.wait_for(
+            asyncio.open_connection(host, port, ssl=_no_verify_context()), timeout
+        )
+    except (OSError, asyncio.TimeoutError) as err:
+        raise NovastarConnectionError(f"{host}:{port}: {err}") from err
+    try:
+        der = writer.get_extra_info("ssl_object").getpeercert(binary_form=True)
+    finally:
+        writer.close()
+    if not der:
+        raise NovastarError("Device did not present a certificate")
+    return hashlib.sha256(der).hexdigest()
+
+
+def _limits() -> tuple[int, int]:
+    return MAX_JSON_BYTES, MAX_SCREENSHOT_BYTES
+
+
+async def _read_limited(resp: aiohttp.ClientResponse, limit: int) -> bytes:
+    """Read a response body, refusing anything larger than limit."""
+    length = getattr(resp, "content_length", None)
+    if length is not None and length > limit:
+        raise NovastarError(f"Response too large ({length} bytes)")
+    body = bytearray()
+    async for chunk in resp.content.iter_chunked(65536):
+        body.extend(chunk)
+        if len(body) > limit:
+            raise NovastarError(f"Response too large (> {limit} bytes)")
+    return bytes(body)
+
+
 def to_float(value: Any) -> float | None:
     try:
         return float(value)
@@ -89,8 +142,10 @@ class NovastarTerminalApi:
         username: str,
         password: str,
         sn: str | None = None,
+        fingerprint: str | None = None,
     ) -> None:
         self._session = session
+        self.fingerprint = fingerprint
         self.host = host
         self.port = port
         self.username = username
@@ -103,6 +158,13 @@ class NovastarTerminalApi:
     @property
     def _base(self) -> str:
         return f"https://{self.host}:{self.port}/terminal"
+
+    @property
+    def _ssl(self) -> aiohttp.Fingerprint | bool:
+        """Pin the device certificate if a fingerprint is known."""
+        if self.fingerprint:
+            return aiohttp.Fingerprint(bytes.fromhex(self.fingerprint))
+        return False
 
     # ------------------------------------------------------------------ internal
 
@@ -119,14 +181,18 @@ class NovastarTerminalApi:
                 url,
                 json=payload,
                 headers=headers,
-                ssl=False,  # the device uses a self-signed certificate
+                ssl=self._ssl,
                 timeout=aiohttp.ClientTimeout(total=10),
             ) as resp:
-                text = await resp.text()
+                text = (await _read_limited(resp, _limits()[0])).decode("utf-8", "replace")
                 if resp.status in (401, 403):
                     raise _TokenExpired(f"HTTP {resp.status}")
                 if resp.status >= 400:
                     raise NovastarError(f"HTTP {resp.status} for {path}: {text[:200]}")
+        except aiohttp.ServerFingerprintMismatch as err:
+            raise NovastarCertificateError(
+                f"Certificate of {self.host} has changed - possible man-in-the-middle attack"
+            ) from err
         except (aiohttp.ClientError, asyncio.TimeoutError) as err:
             raise NovastarConnectionError(f"{url}: {err}") from err
 
@@ -315,16 +381,20 @@ class NovastarTerminalApi:
                     self._base + path,
                     params=params,
                     headers={"Authorization": self._token or ""},
-                    ssl=False,
+                    ssl=self._ssl,
                     timeout=aiohttp.ClientTimeout(total=20),
                 ) as resp:
-                    body = await resp.read()
+                    body = await _read_limited(resp, _limits()[1])
                     ctype = resp.headers.get("Content-Type", "")
                     if resp.status in (401, 403):
                         self._token = None
                         continue
                     if resp.status >= 400:
                         raise NovastarError(f"HTTP {resp.status} for {path}")
+            except aiohttp.ServerFingerprintMismatch as err:
+                raise NovastarCertificateError(
+                    f"Certificate of {self.host} has changed - possible man-in-the-middle attack"
+                ) from err
             except (aiohttp.ClientError, asyncio.TimeoutError) as err:
                 raise NovastarConnectionError(str(err)) from err
             if "json" in ctype or body[:1] == b"{":

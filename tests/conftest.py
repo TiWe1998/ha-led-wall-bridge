@@ -21,3 +21,20 @@ def _start_pycares_shutdown_thread():
 @pytest.fixture(autouse=True)
 def auto_enable_custom_integrations(enable_custom_integrations):
     yield
+
+
+FINGERPRINT = "ab" * 32
+
+
+@pytest.fixture(autouse=True)
+def mock_cert_fingerprint():
+    """No real TLS connection in tests: return a fixed certificate fingerprint."""
+    from unittest.mock import patch
+
+    with patch(
+        "custom_components.novastar_terminal.async_get_cert_fingerprint", return_value=FINGERPRINT
+    ), patch(
+        "custom_components.novastar_terminal.config_flow.async_get_cert_fingerprint",
+        return_value=FINGERPRINT,
+    ):
+        yield FINGERPRINT

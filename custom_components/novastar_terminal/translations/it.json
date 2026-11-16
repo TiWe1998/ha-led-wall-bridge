@@ -43,7 +43,7 @@
       },
       "reauth_confirm": {
         "title": "Accedi di nuovo",
-        "description": "L'accesso è stato rifiutato. Inserisci le credenziali attuali.",
+        "description": "Conferma di nuovo l'accesso. Possibili motivi: la password è stata cambiata oppure il certificato di sicurezza del controller è cambiato (ad es. dopo un ripristino di fabbrica o un aggiornamento del firmware). Se non hai modificato nulla, controlla prima la rete: un certificato diverso può anche indicare che qualcuno sta intercettando la connessione.",
         "data": {
           "username": "Nome utente",
           "password": "Password",

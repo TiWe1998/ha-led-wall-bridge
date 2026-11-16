@@ -43,7 +43,7 @@
       },
       "reauth_confirm": {
         "title": "Přihlásit se znovu",
-        "description": "Přihlášení bylo odmítnuto. Zadejte aktuální přihlašovací údaje.",
+        "description": "Potvrďte prosím znovu přihlášení. Možné důvody: heslo bylo změněno, nebo se změnil bezpečnostní certifikát řadiče (např. po obnovení továrního nastavení nebo aktualizaci firmwaru). Pokud jste nic neměnili, nejprve zkontrolujte síť – změněný certifikát může také znamenat, že někdo připojení odposlouchává.",
         "data": {
           "username": "Uživatelské jméno",
           "password": "Heslo",

@@ -43,7 +43,7 @@
       },
       "reauth_confirm": {
         "title": "Log in again",
-        "description": "The login was rejected. Please enter the current credentials.",
+        "description": "Please confirm the login again. Possible reasons: the password was changed, or the security certificate of the controller has changed (e.g. after a factory reset or firmware update). If you did not change anything, check your network first – a changed certificate can also mean that someone is intercepting the connection.",
         "data": {
           "username": "Username",
           "password": "Password",

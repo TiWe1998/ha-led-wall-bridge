@@ -43,7 +43,7 @@
       },
       "reauth_confirm": {
         "title": "Opnieuw inloggen",
-        "description": "Het inloggen is geweigerd. Voer de actuele inloggegevens in.",
+        "description": "Bevestig het inloggen opnieuw. Mogelijke oorzaken: het wachtwoord is gewijzigd, of het beveiligingscertificaat van de controller is veranderd (bijv. na een fabrieksreset of firmware-update). Heb je niets gewijzigd, controleer dan eerst je netwerk – een gewijzigd certificaat kan ook betekenen dat iemand de verbinding onderschept.",
         "data": {
           "username": "Gebruikersnaam",
           "password": "Wachtwoord",

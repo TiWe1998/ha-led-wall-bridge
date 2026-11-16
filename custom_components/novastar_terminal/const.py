@@ -12,6 +12,7 @@ CONF_SN = "sn"
 CONF_PERSIST = "persist"  # legacy option, now a switch entity
 CONF_SCAN_INTERVAL = "scan_interval"
 CONF_SCREENSHOT_INTERVAL = "screenshot_interval"
+CONF_CERT_FINGERPRINT = "cert_fingerprint"
 
 # Cloud entry
 CONF_CLOUD_DOMAIN = "cloud_domain"
@@ -24,6 +25,10 @@ DEFAULT_SCAN_INTERVAL = 30
 DEFAULT_SCREENSHOT_INTERVAL = 60
 DEFAULT_CLOUD_DOMAIN = "open-us.vnnox.com"
 CLOUD_SCAN_INTERVAL = 300
+
+# Upper limits for data received from a device (protects Home Assistant memory)
+MAX_JSON_BYTES = 1 * 1024 * 1024
+MAX_SCREENSHOT_BYTES = 10 * 1024 * 1024
 
 PORTAL_URL_EU = "https://open-eu.vnnox.com"
 PORTAL_URL_US = "https://open-us.vnnox.com"

@@ -43,7 +43,7 @@
       },
       "reauth_confirm": {
         "title": "Erneut anmelden",
-        "description": "Die Anmeldung wurde abgelehnt. Bitte die aktuellen Zugangsdaten eingeben.",
+        "description": "Bitte bestätige die Anmeldung erneut. Mögliche Gründe: Das Passwort wurde geändert, oder das Sicherheitszertifikat des Controllers hat sich geändert (z. B. nach einem Werksreset oder Firmware-Update). Wenn du nichts geändert hast, prüfe zuerst dein Netzwerk – ein geändertes Zertifikat kann auch bedeuten, dass jemand die Verbindung abfängt.",
         "data": {
           "username": "Benutzername",
           "password": "Passwort",

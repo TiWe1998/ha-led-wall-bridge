@@ -43,7 +43,7 @@
       },
       "reauth_confirm": {
         "title": "Zaloguj ponownie",
-        "description": "Logowanie zostało odrzucone. Wprowadź aktualne dane logowania.",
+        "description": "Potwierdź ponownie logowanie. Możliwe przyczyny: zmieniono hasło lub zmienił się certyfikat bezpieczeństwa kontrolera (np. po przywróceniu ustawień fabrycznych lub aktualizacji oprogramowania). Jeśli niczego nie zmieniałeś, najpierw sprawdź sieć – zmieniony certyfikat może też oznaczać, że ktoś przechwytuje połączenie.",
         "data": {
           "username": "Nazwa użytkownika",
           "password": "Hasło",
