@@ -1,0 +1,12 @@
+# Keeps the pinned GitHub Actions in .github/workflows up to date.
+# Dependabot opens a pull request when a new version is available.
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      github-actions:
+        patterns:
+          - "*"
