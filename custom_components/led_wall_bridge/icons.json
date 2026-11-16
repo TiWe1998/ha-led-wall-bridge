@@ -1,0 +1,90 @@
+{
+  "entity": {
+    "light": {
+      "led_wall": {
+        "default": "mdi:television-ambient-light"
+      }
+    },
+    "number": {
+      "brightness_level": {
+        "default": "mdi:brightness-6"
+      },
+      "volume": {
+        "default": "mdi:volume-high"
+      }
+    },
+    "sensor": {
+      "brightness": {
+        "default": "mdi:brightness-6"
+      },
+      "brightness_raw": {
+        "default": "mdi:brightness-percent"
+      },
+      "firmware": {
+        "default": "mdi:chip"
+      },
+      "android_version": {
+        "default": "mdi:android"
+      },
+      "fpga_version": {
+        "default": "mdi:memory"
+      },
+      "resolution": {
+        "default": "mdi:monitor-screenshot"
+      },
+      "device_time": {
+        "default": "mdi:clock-outline"
+      },
+      "time_zone": {
+        "default": "mdi:earth"
+      },
+      "cloud_last_online": {
+        "default": "mdi:cloud-clock"
+      },
+      "cloud_version": {
+        "default": "mdi:cloud-tags"
+      },
+      "cloud_ip": {
+        "default": "mdi:ip-network"
+      }
+    },
+    "switch": {
+      "screen": {
+        "default": "mdi:monitor"
+      },
+      "brightness_schedule": {
+        "default": "mdi:calendar-clock"
+      },
+      "power_schedule": {
+        "default": "mdi:calendar-clock"
+      },
+      "relay": {
+        "default": "mdi:electric-switch"
+      },
+      "persist": {
+        "default": "mdi:content-save",
+        "state": {
+          "off": "mdi:content-save-off"
+        }
+      }
+    },
+    "button": {
+      "sync_time": {
+        "default": "mdi:clock-check-outline"
+      },
+      "refresh_screenshot": {
+        "default": "mdi:camera-retake"
+      }
+    },
+    "image": {
+      "screenshot": {
+        "default": "mdi:monitor-screenshot"
+      }
+    },
+    "binary_sensor": {
+      "cloud_online": {
+        "default": "mdi:cloud-check"
+      }
+    }
+  }
+}
